@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web MIDI API Example</title>
+    <style>
+        body { font-family: sans-serif; max-width: 600px; margin: 20px; }
+        #midi-status { font-weight: bold; }
+        #midi-log { margin-top: 10px; padding: 10px; border: 1px solid #ccc; height: 200px; overflow-y: scroll; background-color: #f9f9f9; }
+        .log-message { padding: 3px 0; border-bottom: 1px solid #eee; }
+    </style>
+</head>
+<body>
+    <h1>Web MIDI Input Monitor</h1>
+    <p>Connect a MIDI device and grant permission when prompted.</p>
+    <p>Status: <span id="midi-status">Not connected</span></p>
+    
+    <h3>Received MIDI Messages:</h3>
+    <div id="midi-log"></div>
+
+    <script>
+        // Request access to MIDI devices
+        if (navigator.requestMIDIAccess) {
+            navigator.requestMIDIAccess()
+                .then(onMIDISuccess, onMIDIFailure);
+        } else {
+            document.getElementById('midi-status').textContent = 'Web MIDI API is not supported in this browser.';
+            document.getElementById('midi-status').style.color = 'red';
+        }
+
+        function onMIDISuccess(midiAccess) {
+            const statusEl = document.getElementById('midi-status');
+            statusEl.textContent = 'Connected. Waiting for input...';
+            statusEl.style.color = 'green';
+
+            // Get all input devices and loop through them
+            const inputs = midiAccess.inputs.values();
+            for (let input of inputs) {
+                // Add a listener for the "midimessage" event to each input
+                input.onmidimessage = handleMIDIMessage;
+                console.log(`Connected to input: ${input.name}`);
+            }
+        }
+
+        function onMIDIFailure(error) {
+            document.getElementById('midi-status').textContent = `Failed to get MIDI access: ${error.message}`;
+            document.getElementById('midi-status').style.color = 'red';
+        }
+
+        function handleMIDIMessage(event) {
+            // event.data is a Uint8Array [status byte, data1, data2]
+            const data = event.data; 
+            const status = data[0]; // e.g., 0x90 for Note On
+            const note = data[1];   // e.g., 60 for Middle C
+            const velocity = data.length > 2 ? data[2] : 0; // e.g., 127 for max velocity
+
+            let messageType = "Unknown";
+            if (status >= 0x90 && status <= 0x9F) {
+                messageType = `Note On (Velocity: ${velocity})`;
+            } else if (status >= 0x80 && status <= 0x8F) {
+                messageType = "Note Off";
+            }
+            
+            logMessage(`Status: 0x${status.toString(16)}, Note: ${note} (${messageType})`);
+        }
+
+        function logMessage(message) {
+            const log = document.getElementById('midi-log');
+            const entry = document.createElement('div');
+            entry.className = 'log-message';
+            entry.textContent = message;
+            log.appendChild(entry);
+            // Auto-scroll to the bottom
+            log.scrollTop = log.scrollHeight;
+        }
+    </script>
+</body>
+</html>
