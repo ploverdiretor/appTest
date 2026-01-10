@@ -19,12 +19,24 @@
     <h3>Received MIDI Messages:</h3>
     <div id="midi-log"></div>
     <hr/>
+    <table border="1" width="800px">
+        <tr>
+            <td align="center" width="25%">0</td><td align="center" width="25%">1</td><td align="center" width="25%">2</td><td align="center">3</td>
+        </tr>
+        <tr>
+            <td id="voice0" align="center"></td><td id="voice1" align="center"></td><td id="voice2" align="center"></td><td id="voice3" align="center"></td>
+        </tr>
+    </table>
+    <hr/>
     <div>
-    <button id="play">Play</button> <button id="stop">Stop</button><br/>
-    <table>
-    <!--<tr><th>Freq</th><td><input type="range" id="freq" min="50" max="1000" value="440"/></td><td id="freqval"></td></tr>-->
-    <tr><th>key</th><td><input type="range" id="key" min="0" max="87" step="1" value="48"/></td><td id="freqval"></td></tr>
-    <tr><th>Gain</th><td><input type="range" id="gain" min="0" max="1" step="0.01" value="0.1"/></td><td id="gainval"></td></tr>
+    <button id="play">Play</button> <button id="stop">Stop</button><br><table>
+    <tr><th>key</th><td><input type="range" id="key" min="0" max="87" step="1" value="48"/></td><td id="freqval"></td>
+ <!--   <td><input type="range" id="key1" min="0" max="87" step="1" value="48"/></td><td id="freqval1"></td>-->
+    </tr>
+    <tr><th>Gain</th>
+    <td><input type="range" id="gain" min="0" max="1" step="0.01" value="1"/></td><td id="gainval"></td>
+ <!--   <td><input type="range" id="gain1" min="0" max="1" step="0.01" value="0.1"/></td><td id="gainval1"></td>-->
+    </tr>
 
     <tr><td><br/></td></tr>
     <tr><th>Harmonics</th><th>imag</th></tr>
@@ -46,7 +58,9 @@
     <tr><td><br/></td></tr>
     <tr><th>Reverb</th><th></th></tr>
     <tr><th>Mix</th><td><input type="range" id="revlevel" min="0" max="1" step="0.01" value="0.5"/></td><td id="revlevelval"></td></tr>
-
+    
+    <tr><td><br/></td></tr>
+    <tr><th>Master</th><td><input type="range" id="master" min="0" max="1" step="0.01" value="0.1"/></td><td id="masterval"></td></tr>
     </table>
 
     </div>
@@ -90,6 +104,13 @@
                             '','','','','','','','','','',
                             '','','','','ポルタメントコントロール'];
         let midiNoteValue = 0
+        let voice = ['OFF','OFF','OFF','OFF']
+        let voiceIndex = 0
+        for(let i=0;i<4;i++){
+            const index = 'voice'+i
+            document.getElementById(index).innerHTML = voice[i]
+        }
+        
         if (navigator.requestMIDIAccess) {
             navigator.requestMIDIAccess()
                 .then(onMIDISuccess, onMIDIFailure);
@@ -133,13 +154,20 @@
             switch(status){
                 case 0x08:
                     midiText = 'Ch('+midiCh+')　Note Off('+noteNum[data[1]]+') velo:'+data[2].toString(10).padStart(3,'0')
+                    audioctx.suspend();
+                    voice[0]='OFF'
+                    document.getElementById("voice0").innerHTML = voice[0]
                     break
                 case 0x09:
                     midiNoteValue = parseInt(data[1])-21
                     midiText = 'Ch('+midiCh+')　Note On('+noteNum[data[1]]+') velo:'+data[2].toString(10).padStart(3,'0')+'　freq:'+keyTable[midiNoteValue].toFixed(3)+','+midiNoteValue
                     document.getElementById("key").value = midiNoteValue 
                     document.getElementById("freqval").innerHTML= Math.round(keyTable[document.getElementById("key").value]*1000)/1000
+                    voice[0]=data[1]
+                    document.getElementById("voice0").innerHTML = voice[0]
                     Setup()
+                    SetupWave();
+                    audioctx.resume();
                     break
                 case 0x0a:
                     break
@@ -178,10 +206,13 @@
         /*--------------------------オシレーター-------------------------*/
         const audioctx = new AudioContext();
         const osc = new OscillatorNode(audioctx);
+    //    const osc1 = new OscillatorNode(audioctx);
 
         const tablen = 8;
         const real = new Float32Array(tablen);
         const imag = new Float32Array(tablen);
+
+        const gain = new GainNode(audioctx);
 
         /*---------------------------コーラス----------------------------*/
         const lfo = new OscillatorNode(audioctx);
@@ -201,12 +232,12 @@
         const drymix = new GainNode(audioctx);
 
         /*-----------------------------音量------------------------------*/
-        const gain = new GainNode(audioctx);
+        const master = new GainNode(audioctx);
 
         /*-----------------------------接続------------------------------*/
-        osc.connect(delay).connect(mix).connect(output).connect(convolver).connect(gain).connect(audioctx.destination);
-        osc.connect(output)
-        output.connect(drymix).connect(gain)
+        osc.connect(gain).connect(delay).connect(mix).connect(output).connect(convolver).connect(master).connect(audioctx.destination);
+        osc.connect(gain).connect(output)
+        output.connect(drymix).connect(master)
         lfo.connect(depth).connect(delay.delayTime);
         audioctx.suspend();
         osc.start();
@@ -229,6 +260,7 @@
         document.getElementById("mix").addEventListener("input", Setup);
         document.getElementById("output").addEventListener("input", Setup);
         document.getElementById("revlevel").addEventListener("input", Setup);
+        document.getElementById("master").addEventListener("input", Setup);
         Setup();
         SetupWave();
         function Setup(){
@@ -250,6 +282,8 @@
             mix.gain.value = mixval;
             output.gain.value = document.getElementById("outputval").innerHTML
                 = document.getElementById("output").value;
+            master.gain.value = document.getElementById("masterval").innerHTML
+                = document.getElementById("master").value;
         }
         function SetupWave(){
             for(i = 0; i < tablen; i++) { // make Harmonics
