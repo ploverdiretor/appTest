@@ -5,84 +5,143 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Web MIDI Synthesizer</title>
     <style>
-        body { font-family: sans-serif; max-width: 800px; margin: 20px; font-family: "monospace" ;}
+     /*   body { font-family: monospace; max-width: 800px; margin: 20px;  }*/
+        body { font-family: monospace; margin: 20px;  width:95%;}
         #midi-status { font-weight: bold; }
-        #midi-log { margin-top: 10px; padding: 10px; border: 1px solid #ccc; height: 200px; overflow-y: scroll; background-color: #f9f9f9; }
-        .log-message { padding: 3px 0; border-bottom: 1px solid #eee; font-family: "monospace" ;}
+        #midi-log { margin-top: 10px; padding: 10px; border: 1px solid #ccc; height: 200px; overflow-y: scroll; background-color: #f9f9f9; max-width: 800px; }
+        .log-message { padding: 3px 0; border-bottom: 1px solid #eee; }
+        #field {display:flex; justify-content: start;}
+        #field_right{width:50%;margin: 20px;}
+        #field_left{width:50%; margin: 20px;}
     </style>
 </head>
 <body>
     <h1>Web MIDI Synthesizer</h1>
-    <p>Connect a MIDI device and grant permission when prompted.</p><hr>
     <p>Status: <span id="midi-status">Not connected</span></p>
-    
-    <h3>Received MIDI Messages:</h3>
-    <div id="midi-log"></div>
-    <hr/>
-    <h3>Voice Assigner:</h3>
-    <table border="1" width="800px">
-        <tr>
-            <td align="center" width="12.5%">0</td><td align="center" width="12.5%">1</td><td align="center" width="12.5%">2</td><td align="center" width="12.5%">3</td>
-            <td align="center" width="12.5%">4</td><td align="center" width="12.5%">5</td><td align="center" width="12.5%">6</td><td align="center" width="12.5%">7</td>
-        </tr>
-        <tr>
-            <td id="voice0" align="center"></td><td id="voice1" align="center"></td><td id="voice2" align="center"></td><td id="voice3" align="center"></td>
-            <td id="voice4" align="center"></td><td id="voice5" align="center"></td><td id="voice6" align="center"></td><td id="voice7" align="center"></td>
-        </tr>
-    </table>
-    <hr/>
-    <div>
-    <button id="play">Play</button> <button id="stop">Stop</button><br><table>
-    <tr><th>key</th>
-    <td><input type="range" id="key0" min="0" max="87" step="1" value="48"/></td><td id="freq0val"></td>
-    <td><input type="range" id="key1" min="0" max="87" step="1" value="48"/></td><td id="freq1val"></td>
-    <td><input type="range" id="key2" min="0" max="87" step="1" value="48"/></td><td id="freq2val"></td>
-    <td><input type="range" id="key3" min="0" max="87" step="1" value="48"/></td><td id="freq3val"></td>
-    </tr>
-    <tr><th>Gain</th>
-    <td><input type="range" id="gain0" min="0" max="1" step="0.01" value="0"/></td><td id="gain0val"></td>
-    <td><input type="range" id="gain1" min="0" max="1" step="0.01" value="0"/></td><td id="gain1val"></td>
-    <td><input type="range" id="gain2" min="0" max="1" step="0.01" value="0"/></td><td id="gain2val"></td>
-    <td><input type="range" id="gain3" min="0" max="1" step="0.01" value="0"/></td><td id="gain3val"></td>
-    </tr>
-    <tr><td><br/></td></tr>
-    <tr><th>key</th>
-    <td><input type="range" id="key4" min="0" max="87" step="1" value="48"/></td><td id="freq4val"></td>
-    <td><input type="range" id="key5" min="0" max="87" step="1" value="48"/></td><td id="freq5val"></td>
-    <td><input type="range" id="key6" min="0" max="87" step="1" value="48"/></td><td id="freq6val"></td>
-    <td><input type="range" id="key7" min="0" max="87" step="1" value="48"/></td><td id="freq7val"></td>
-    </tr>
-    <tr><th>Gain</th>
-    <td><input type="range" id="gain4" min="0" max="1" step="0.01" value="0"/></td><td id="gain4val"></td>
-    <td><input type="range" id="gain5" min="0" max="1" step="0.01" value="0"/></td><td id="gain5val"></td>
-    <td><input type="range" id="gain6" min="0" max="1" step="0.01" value="0"/></td><td id="gain6val"></td>
-    <td><input type="range" id="gain7" min="0" max="1" step="0.01" value="0"/></td><td id="gain7val"></td>
-    </tr>
-    <tr><td><br/></td></tr>
-    <tr><th>Harmonics</th><th>imag</th></tr>
-    <tr><th>1</th><td><input type="range" min="0" max="1" step="0.01" id="imag1" value="1"/></td><td id="imag1val"></td></tr>
-    <tr><th>2</th><td><input type="range" min="0" max="1" step="0.01" id="imag2" value="0.5"/></td><td id="imag2val"></td></tr>
-    <tr><th>3</th><td><input type="range" min="0" max="1" step="0.01" id="imag3" value="0"/></td><td id="imag3val"></td></tr>
-    <tr><th>4</th><td><input type="range" min="0" max="1" step="0.01" id="imag4" value="0"/></td><td id="imag4val"></td></tr>
-    <tr><th>5</th><td><input type="range" min="0" max="1" step="0.01" id="imag5" value="0"/></td><td id="imag5val"></td></tr>
-    <tr><th>6</th><th><input type="range" min="0" max="1" step="0.01" id="imag6" value="0"/></td><td id="imag6val"></td></tr>
-    <tr><th>7</th><td><input type="range" min="0" max="1" step="0.01" id="imag7" value="0"/></td><td id="imag7val"></td></tr>
+    <hr>
+    <div id="field">
+        <div id="field_left">
+            <h3>Received MIDI Messages:</h3>
+            <div id="midi-log"></div>
+            <hr width="95%" align="left">
+            <h3>Voice Assigner:</h3>
+            <table border="1" width="800px"  style="border-collapse: collapse">
+                <tr>
+                    <td align="center" width="6.25%">0</td><td align="center" width="6.25%">1</td><td align="center" width="6.25%">2</td><td align="center" width="6.25%">3</td>
+                    <td align="center" width="6.25%">4</td><td align="center" width="6.25%">5</td><td align="center" width="6.25%">6</td><td align="center" width="6.25%">7</td>
+                    <td align="center" width="6.25%">8</td><td align="center" width="6.25%">9</td><td align="center" width="6.25%">10</td><td align="center" width="6.25%">11</td>
+                    <td align="center" width="6.25%">12</td><td align="center" width="6.25%">13</td><td align="center" width="6.25%">14</td><td align="center" width="6.25%">15</td>
+                </tr>
+                <tr>
+                    <td id="voice0" align="center"></td><td id="voice1" align="center"></td><td id="voice2" align="center"></td><td id="voice3" align="center"></td>
+                    <td id="voice4" align="center"></td><td id="voice5" align="center"></td><td id="voice6" align="center"></td><td id="voice7" align="center"></td>
+                    <td id="voice8" align="center"></td><td id="voice9" align="center"></td><td id="voice10" align="center"></td><td id="voice11" align="center"></td>
+                    <td id="voice12" align="center"></td><td id="voice13" align="center"></td><td id="voice14" align="center"></td><td id="voice15" align="center"></td>
+                </tr>
+            </table><br>
+            <hr width="95%" align="left">
+        
+            <table border="0">
+                <tr><td><h3>Oscillator:</h3></td><td><button id="play">Play</button> <button id="stop">Stop</button></td></tr>
+            </table>
+            <table border="0" width="95%" >
+                <tr><th width="4%">OSC</th><th width="12%">0</th><th width="12%"></th><th width="12%">1</th><th width="12%"></th>
+                    <th width="12%">2</th><th width="12%"></th><th width="12%">3</th><th width="12%"></th></tr>
+                <tr><th>key</th>
+                <td><input type="range" id="key0" min="0" max="87" step="1" value="48"/></td><td id="freq0val"></td>
+                <td><input type="range" id="key1" min="0" max="87" step="1" value="48"/></td><td id="freq1val"></td>
+                <td><input type="range" id="key2" min="0" max="87" step="1" value="48"/></td><td id="freq2val"></td>
+                <td><input type="range" id="key3" min="0" max="87" step="1" value="48"/></td><td id="freq3val"></td>
+                </tr>
+                <tr><th>Gain</th>
+                <td><input type="range" id="gain0" min="0" max="1" step="0.01" value="0"/></td><td id="gain0val"></td>
+                <td><input type="range" id="gain1" min="0" max="1" step="0.01" value="0"/></td><td id="gain1val"></td>
+                <td><input type="range" id="gain2" min="0" max="1" step="0.01" value="0"/></td><td id="gain2val"></td>
+                <td><input type="range" id="gain3" min="0" max="1" step="0.01" value="0"/></td><td id="gain3val"></td>
+                </tr>
+                <tr><td><br/></td></tr>
+                <tr><th>OSC</th><th>4</th><th></th><th>5</th><th></th><th>6</th><th></th><th>7</th></tr>
+                <tr><th>key</th>
+                <td><input type="range" id="key4" min="0" max="87" step="1" value="48"/></td><td id="freq4val"></td>
+                <td><input type="range" id="key5" min="0" max="87" step="1" value="48"/></td><td id="freq5val"></td>
+                <td><input type="range" id="key6" min="0" max="87" step="1" value="48"/></td><td id="freq6val"></td>
+                <td><input type="range" id="key7" min="0" max="87" step="1" value="48"/></td><td id="freq7val"></td>
+                </tr>
+                <tr><th>Gain</th>
+                <td><input type="range" id="gain4" min="0" max="1" step="0.01" value="0"/></td><td id="gain4val"></td>
+                <td><input type="range" id="gain5" min="0" max="1" step="0.01" value="0"/></td><td id="gain5val"></td>
+                <td><input type="range" id="gain6" min="0" max="1" step="0.01" value="0"/></td><td id="gain6val"></td>
+                <td><input type="range" id="gain7" min="0" max="1" step="0.01" value="0"/></td><td id="gain7val"></td>
+                </tr>
+                <tr><td><br/></td></tr>
+                <tr><th>OSC</th><th>8</th><th></th><th>9</th><th></th><th>10</th><th></th><th>11</th></tr>
+                <tr><th>key</th>
+                <td><input type="range" id="key8" min="0" max="87" step="1" value="48"/></td><td id="freq8val"></td>
+                <td><input type="range" id="key9" min="0" max="87" step="1" value="48"/></td><td id="freq9val"></td>
+                <td><input type="range" id="key10" min="0" max="87" step="1" value="48"/></td><td id="freq10val"></td>
+                <td><input type="range" id="key11" min="0" max="87" step="1" value="48"/></td><td id="freq11val"></td>
+                </tr>
+                <tr><th>Gain</th>
+                <td><input type="range" id="gain8" min="0" max="1" step="0.01" value="0"/></td><td id="gain8val"></td>
+                <td><input type="range" id="gain9" min="0" max="1" step="0.01" value="0"/></td><td id="gain9val"></td>
+                <td><input type="range" id="gain10" min="0" max="1" step="0.01" value="0"/></td><td id="gain10val"></td>
+                <td><input type="range" id="gain11" min="0" max="1" step="0.01" value="0"/></td><td id="gain11val"></td>
+                </tr>
+                <tr><td><br/></td></tr>
+                <tr><th>OSC</th><th>12</th><th></th><th>13</th><th></th><th>14</th><th></th><th>15</th></tr>
+                <tr><th>key</th>
+                <td><input type="range" id="key12" min="0" max="87" step="1" value="48"/></td><td id="freq12val"></td>
+                <td><input type="range" id="key13" min="0" max="87" step="1" value="48"/></td><td id="freq13val"></td>
+                <td><input type="range" id="key14" min="0" max="87" step="1" value="48"/></td><td id="freq14val"></td>
+                <td><input type="range" id="key15" min="0" max="87" step="1" value="48"/></td><td id="freq15val"></td>
+                </tr>
+                <tr><th>Gain</th>
+                <td><input type="range" id="gain12" min="0" max="1" step="0.01" value="0"/></td><td id="gain12val"></td>
+                <td><input type="range" id="gain13" min="0" max="1" step="0.01" value="0"/></td><td id="gain13val"></td>
+                <td><input type="range" id="gain14" min="0" max="1" step="0.01" value="0"/></td><td id="gain14val"></td>
+                <td><input type="range" id="gain15" min="0" max="1" step="0.01" value="0"/></td><td id="gain15val"></td>
+                </tr>
+            </table>
+            <hr width="95%" align="left">
+        </div>
+        <hr>
+        <div id="field_right">
+            <h3>Custom waveform:</h3>
+            <table border="0">
+            <tr><th>Harmonics</th><th>imag</th></tr>
+            <tr><th>1</th><td><input type="range" min="0" max="1" step="0.01" id="imag1" value="1"/></td><td id="imag1val"></td></tr>
+            <tr><th>2</th><td><input type="range" min="0" max="1" step="0.01" id="imag2" value="0.5"/></td><td id="imag2val"></td></tr>
+            <tr><th>3</th><td><input type="range" min="0" max="1" step="0.01" id="imag3" value="0"/></td><td id="imag3val"></td></tr>
+            <tr><th>4</th><td><input type="range" min="0" max="1" step="0.01" id="imag4" value="0"/></td><td id="imag4val"></td></tr>
+            <tr><th>5</th><td><input type="range" min="0" max="1" step="0.01" id="imag5" value="0"/></td><td id="imag5val"></td></tr>
+            <tr><th>6</th><th><input type="range" min="0" max="1" step="0.01" id="imag6" value="0"/></td><td id="imag6val"></td></tr>
+            <tr><th>7</th><td><input type="range" min="0" max="1" step="0.01" id="imag7" value="0"/></td><td id="imag7val"></td></tr>
+            </table>
+            <br>
+            <hr width="95%" align="left">
+            <h3>Effect:</h3>
+            <table>
+            <tr><th>Panner</th></tr>
+            <tr><th>PanSpeed</th><td><input type="range" id="panSpeed" min="3.5" max="7" step="0.01" value="3.5"/></td><td id="panSpeedVal"></td></tr>
+            <tr><th>PositionX</th><td><input type="range" id="posx" min="-1" max="1" step="0.01" value="0"></td><td id="posxVal"></td></tr>
+            <tr><th>PositionY</th><td><input type="range" id="posy" min="-1" max="1" step="0.01" value="0"></td><td id="posyVal"></td></tr>
+            <tr><th>PositionZ</th><td><input type="range" id="posz" min="-1" max="1" step="0.01" value="0"></td><td id="poszVal"></td></tr>
+            <tr><th>PanGain</th><td><input type="range" id="panGain" min="0" max="1" step="0.01" value="0.8"/></td><td id="panGainVal"></td></tr>
+            <tr><td><br/></td></tr>
+            <tr><th>Chorus</th><th></th></tr>
+            <tr><th>Speed</th><td><input type="range" id="speed" min="0.1" max="10" step="0.1" value="7"/></td><td id="speedval"></td></tr>
+            <tr><th>Depth</th><td><input type="range" id="depth" min="0.000" max="0.005" step="0.0001" value="0.0003"/></td><td id="depthval"></td></tr>
+            <tr><th>Mix</th><td><input type="range" id="mix" min="0" max="1" step="0.01" value="0.4"/></td><td id="mixval"></td></tr>
+            <tr><th>Output</th><td><input type="range" id="output" min="0" max="1" step="0.01" value="0.8"/></td><td id="outputval"></td></tr>
 
-    <tr><td><br/></td></tr>
-    <tr><th>Chorus</th><th></th></tr>
-    <tr><th>Speed</th><td><input type="range" id="speed" min="0.1" max="10" step="0.1" value="7"/></td><td id="speedval"></td></tr>
-    <tr><th>Depth</th><td><input type="range" id="depth" min="0.000" max="0.005" step="0.0001" value="0.0003"/></td><td id="depthval"></td></tr>
-    <tr><th>Mix</th><td><input type="range" id="mix" min="0" max="1" step="0.01" value="0.4"/></td><td id="mixval"></td></tr>
-    <tr><th>Output</th><td><input type="range" id="output" min="0" max="1" step="0.01" value="0.8"/></td><td id="outputval"></td></tr>
-
-    <tr><td><br/></td></tr>
-    <tr><th>Reverb</th><th></th></tr>
-    <tr><th>Mix</th><td><input type="range" id="revlevel" min="0" max="1" step="0.01" value="0.5"/></td><td id="revlevelval"></td></tr>
-    
-    <tr><td><br/></td></tr>
-    <tr><th>Master</th><td><input type="range" id="master" min="0" max="1" step="0.01" value="0.2"/></td><td id="masterval"></td></tr>
-    </table>
-
+            <tr><td><br/></td></tr>
+            <tr><th>Reverb</th><th></th></tr>
+            <tr><th>Mix</th><td><input type="range" id="revlevel" min="0" max="1" step="0.01" value="0.5"/></td><td id="revlevelval"></td></tr>
+            
+            <tr><td><br/></td></tr>
+            <tr><th>Master</th><td><input type="range" id="master" min="0" max="1" step="0.01" value="0.2"/></td><td id="masterval"></td></tr>
+            </table>
+        </div>
     </div>
     <script>
         // Request access to MIDI devices
@@ -124,9 +183,9 @@
                             '','','','','','','','','','',
                             '','','','','ポルタメントコントロール'];
         let midiNoteValue = 0
-        let voice = ['OFF','OFF','OFF','OFF','OFF','OFF','OFF','OFF']
+        let voice = ['OFF','OFF','OFF','OFF','OFF','OFF','OFF','OFF','OFF','OFF','OFF','OFF','OFF','OFF','OFF','OFF']
         let voiceIndex = 0
-        for(let i=0;i<8;i++){
+        for(let i=0;i<16;i++){
             const index = 'voice'+i
             document.getElementById(index).innerHTML = voice[i]
         }
@@ -174,7 +233,7 @@
             switch(status){
                 case 0x08:
                     midiText = 'Ch('+midiCh+')　Note Off('+noteNum[data[1]]+') velo:'+data[2].toString(10).padStart(3,'0')
-                    for(let i=0;i<8;i++){
+                    for(let i=0;i<16;i++){
                         if(voice[i]===data[1]){
                             voice[i]='OFF'
                             const index = 'voice'+i
@@ -204,6 +263,30 @@
                                 case 7:
                                     gain7.gain.value = document.getElementById("gain7val").innerHTML= document.getElementById("gain7").value=0;
                                     break
+                                case 8:
+                                    gain8.gain.value = document.getElementById("gain8val").innerHTML= document.getElementById("gain8").value=0;
+                                    break
+                                case 9:
+                                    gain9.gain.value = document.getElementById("gain9val").innerHTML= document.getElementById("gain9").value=0;
+                                    break
+                                case 10:
+                                    gain10.gain.value = document.getElementById("gain10val").innerHTML= document.getElementById("gain10").value=0;
+                                    break
+                                case 11:
+                                    gain11.gain.value = document.getElementById("gain11val").innerHTML= document.getElementById("gain11").value=0;
+                                    break
+                                case 12:
+                                    gain12.gain.value = document.getElementById("gain12val").innerHTML= document.getElementById("gain12").value=0;
+                                    break
+                                case 13:
+                                    gain13.gain.value = document.getElementById("gain13val").innerHTML= document.getElementById("gain13").value=0;
+                                    break
+                                case 14:
+                                    gain14.gain.value = document.getElementById("gain14val").innerHTML= document.getElementById("gain14").value=0;
+                                    break
+                                case 15:
+                                    gain15.gain.value = document.getElementById("gain15val").innerHTML= document.getElementById("gain15").value=0;
+                                    break
                                 default:
                                     break
                             }
@@ -214,14 +297,14 @@
                     break
                 case 0x09:
                     midiNoteValue = parseInt(data[1])-21
-                    midiText = 'Ch('+midiCh+')　Note On('+noteNum[data[1]]+') velo:'+data[2].toString(10).padStart(3,'0')+'　freq:'+keyTable[midiNoteValue].toFixed(3)+','+midiNoteValue
-                    for(let i=0;i<8;i++){
+                    midiText = 'Ch('+midiCh+')　Note On('+noteNum[data[1]]+') velo:'+data[2].toString(10).padStart(3,'0')+'　freq:'+keyTable[midiNoteValue].toFixed(2)
+                    for(let i=0;i<16;i++){
                         if(voice[i]==='OFF'){
                             voice[i]=data[1]
                             const index = 'voice'+i
                             document.getElementById(index).innerHTML = voice[i]
                             document.getElementById('key'+i).value = midiNoteValue
-                            document.getElementById('freq'+i+'val').innerHTML= Math.round(keyTable[document.getElementById('key'+i).value]*1000)/1000
+                            document.getElementById('freq'+i+'val').innerHTML= keyTable[document.getElementById('key'+i).value].toFixed(2)
                             Setup()
                             SetupWave(i);
                             switch(i){
@@ -248,6 +331,30 @@
                                     break
                                 case 7:
                                     gain7.gain.value = document.getElementById("gain7val").innerHTML= document.getElementById("gain7").value=1;
+                                    break
+                                case 8:
+                                    gain8.gain.value = document.getElementById("gain8val").innerHTML= document.getElementById("gain8").value=1;
+                                    break
+                                case 9:
+                                    gain9.gain.value = document.getElementById("gain9val").innerHTML= document.getElementById("gain9").value=1;
+                                    break
+                                case 10:
+                                    gain10.gain.value = document.getElementById("gain10val").innerHTML= document.getElementById("gain10").value=1;
+                                    break
+                                case 11:
+                                    gain11.gain.value = document.getElementById("gain11val").innerHTML= document.getElementById("gain11").value=1;
+                                    break
+                                case 12:
+                                    gain12.gain.value = document.getElementById("gain12val").innerHTML= document.getElementById("gain12").value=1;
+                                    break
+                                case 13:
+                                    gain13.gain.value = document.getElementById("gain13val").innerHTML= document.getElementById("gain13").value=1;
+                                    break
+                                case 14:
+                                    gain14.gain.value = document.getElementById("gain14val").innerHTML= document.getElementById("gain14").value=1;
+                                    break
+                                case 15:
+                                    gain15.gain.value = document.getElementById("gain15val").innerHTML= document.getElementById("gain15").value=1;
                                     break
                                 default:
                                     break
@@ -301,6 +408,14 @@
         const osc5 = new OscillatorNode(audioctx);
         const osc6 = new OscillatorNode(audioctx);
         const osc7 = new OscillatorNode(audioctx);
+        const osc8 = new OscillatorNode(audioctx);
+        const osc9 = new OscillatorNode(audioctx);
+        const osc10 = new OscillatorNode(audioctx);
+        const osc11 = new OscillatorNode(audioctx);
+        const osc12 = new OscillatorNode(audioctx);
+        const osc13 = new OscillatorNode(audioctx);
+        const osc14 = new OscillatorNode(audioctx);
+        const osc15 = new OscillatorNode(audioctx);
 
         const tablen = 8;
         const real = new Float32Array(tablen);
@@ -314,6 +429,30 @@
         const gain5 = new GainNode(audioctx);
         const gain6 = new GainNode(audioctx);
         const gain7 = new GainNode(audioctx);
+        const gain8 = new GainNode(audioctx);
+        const gain9 = new GainNode(audioctx);
+        const gain10 = new GainNode(audioctx);
+        const gain11 = new GainNode(audioctx);
+        const gain12 = new GainNode(audioctx);
+        const gain13 = new GainNode(audioctx);
+        const gain14 = new GainNode(audioctx);
+        const gain15 = new GainNode(audioctx);
+
+        /*---------------------------ロータリー----------------------------*/
+
+
+        const panner = new PannerNode(audioctx, {panningModel:"HRTF"});
+        const panGain = new GainNode(audioctx);
+        const panLfoGain = new GainNode(audioctx);
+        panLfoGain.gain.value = 0.1
+        panGain.gain.value = document.getElementById("panGain").value;
+        panner.positionX.value = document.getElementById("posx").value;
+        panner.positionY.value = document.getElementById("posy").value;
+        panner.positionZ.value = document.getElementById("posz").value;
+        const panLfo = new OscillatorNode(audioctx);
+        panLfo.frequency.value = document.getElementById("panSpeed").value;
+     //   panLfo.level.value = 0.1;
+        panLfo.start()
         /*---------------------------コーラス----------------------------*/
         const lfo = new OscillatorNode(audioctx);
         const depth = new GainNode(audioctx);
@@ -335,25 +474,28 @@
         const master = new GainNode(audioctx);
 
         /*-----------------------------接続------------------------------*/
-        osc0.connect(gain0).connect(delay).connect(mix).connect(output).connect(convolver).connect(master).connect(audioctx.destination);
-        osc0.connect(gain0).connect(output)
-        osc1.connect(gain1).connect(delay)
-        osc1.connect(gain1).connect(output)
-        osc2.connect(gain2).connect(delay)
-        osc2.connect(gain2).connect(output)
-        osc3.connect(gain3).connect(delay)
-        osc3.connect(gain3).connect(output)
-        osc4.connect(gain4).connect(delay)
-        osc4.connect(gain4).connect(output)
-        osc5.connect(gain5).connect(delay)
-        osc5.connect(gain5).connect(output)
-        osc6.connect(gain6).connect(delay)
-        osc6.connect(gain6).connect(output)
-        osc7.connect(gain7).connect(delay)
-        osc7.connect(gain7).connect(output)
-
+        osc0.connect(gain0).connect(panner).connect(panGain).connect(delay).connect(mix).connect(output).connect(convolver).connect(master).connect(audioctx.destination);
+        osc0.connect(gain0).connect(panner)
+        osc1.connect(gain1).connect(panner)
+        osc2.connect(gain2).connect(panner)
+        osc3.connect(gain3).connect(panner)
+        osc4.connect(gain4).connect(panner)
+        osc5.connect(gain5).connect(panner)
+        osc6.connect(gain6).connect(panner)
+        osc7.connect(gain7).connect(panner)
+        osc8.connect(gain8).connect(panner)
+        osc9.connect(gain9).connect(panner)
+        osc10.connect(gain10).connect(panner)
+        osc11.connect(gain11).connect(panner)
+        osc12.connect(gain12).connect(panner)
+        osc13.connect(gain13).connect(panner)
+        osc14.connect(gain14).connect(panner)
+        osc15.connect(gain15).connect(panner)
+        panGain.connect(output)
+        panLfo.connect(panLfoGain).connect(panner.positionX)
         output.connect(drymix).connect(master)
         lfo.connect(depth).connect(delay.delayTime);
+
         audioctx.suspend();
         osc0.start();
         osc1.start();
@@ -363,7 +505,14 @@
         osc5.start();
         osc6.start();
         osc7.start();
-
+        osc8.start();
+        osc9.start();
+        osc10.start();
+        osc11.start();
+        osc12.start();
+        osc13.start();
+        osc14.start();
+        osc15.start();
         document.getElementById("stop").addEventListener("click", ()=>{
             audioctx.suspend();
         });
@@ -376,6 +525,14 @@
             SetupWave(5);
             SetupWave(6);
             SetupWave(7);
+            SetupWave(8);
+            SetupWave(9);
+            SetupWave(10);
+            SetupWave(11);
+            SetupWave(12);
+            SetupWave(13);
+            SetupWave(14);
+            SetupWave(15);
             audioctx.resume();
         });
         document.getElementById("key0").addEventListener("input", Setup);
@@ -386,7 +543,30 @@
         document.getElementById("gain2").addEventListener("input", Setup);
         document.getElementById("key3").addEventListener("input", Setup);
         document.getElementById("gain3").addEventListener("input", Setup);
-
+        document.getElementById("key4").addEventListener("input", Setup);
+        document.getElementById("gain4").addEventListener("input", Setup);
+        document.getElementById("key5").addEventListener("input", Setup);
+        document.getElementById("gain5").addEventListener("input", Setup);
+        document.getElementById("key6").addEventListener("input", Setup);
+        document.getElementById("gain6").addEventListener("input", Setup);
+        document.getElementById("key7").addEventListener("input", Setup);
+        document.getElementById("gain7").addEventListener("input", Setup);
+        document.getElementById("key8").addEventListener("input", Setup);
+        document.getElementById("gain8").addEventListener("input", Setup);
+        document.getElementById("key9").addEventListener("input", Setup);
+        document.getElementById("gain9").addEventListener("input", Setup);
+        document.getElementById("key10").addEventListener("input", Setup);
+        document.getElementById("gain10").addEventListener("input", Setup);
+        document.getElementById("key11").addEventListener("input", Setup);
+        document.getElementById("gain11").addEventListener("input", Setup);
+        document.getElementById("key12").addEventListener("input", Setup);
+        document.getElementById("gain12").addEventListener("input", Setup);
+        document.getElementById("key13").addEventListener("input", Setup);
+        document.getElementById("gain13").addEventListener("input", Setup);
+        document.getElementById("key14").addEventListener("input", Setup);
+        document.getElementById("gain14").addEventListener("input", Setup);
+        document.getElementById("key15").addEventListener("input", Setup);
+        document.getElementById("gain15").addEventListener("input", Setup);
         for(let i=1;i<8;++i){
             document.getElementById("imag"+i).addEventListener("input", ()=>{
                 Setup()
@@ -398,8 +578,21 @@
                 SetupWave(5);
                 SetupWave(6);
                 SetupWave(7);
+                SetupWave(8);
+                SetupWave(9);
+                SetupWave(10);
+                SetupWave(11);
+                SetupWave(12);
+                SetupWave(13);
+                SetupWave(14);
+                SetupWave(15);
             });
         }
+        document.getElementById("panSpeed").addEventListener("input", Setup);
+        document.getElementById("posx").addEventListener("input", Setup);
+        document.getElementById("posy").addEventListener("input", Setup);
+        document.getElementById("posz").addEventListener("input", Setup);
+        document.getElementById("panGain").addEventListener("input", Setup);
 
         document.getElementById("speed").addEventListener("input", Setup);
         document.getElementById("depth").addEventListener("input", Setup);
@@ -416,7 +609,16 @@
         SetupWave(5);
         SetupWave(6);
         SetupWave(7);
+        SetupWave(8);
+        SetupWave(9);
+        SetupWave(10);
+        SetupWave(11);
+        SetupWave(12);
+        SetupWave(13);
+        SetupWave(14);
+        SetupWave(15);
         audioctx.resume();
+
         function Setup(){
             osc0.frequency.value = keyTable[document.getElementById("key0").value];
             osc1.frequency.value = keyTable[document.getElementById("key1").value];
@@ -426,14 +628,30 @@
             osc5.frequency.value = keyTable[document.getElementById("key5").value];
             osc6.frequency.value = keyTable[document.getElementById("key6").value];
             osc7.frequency.value = keyTable[document.getElementById("key7").value];
-            document.getElementById("freq0val").innerHTML= Math.round(keyTable[document.getElementById("key0").value]*1000)/1000
-            document.getElementById("freq1val").innerHTML= Math.round(keyTable[document.getElementById("key1").value]*1000)/1000
-            document.getElementById("freq2val").innerHTML= Math.round(keyTable[document.getElementById("key2").value]*1000)/1000
-            document.getElementById("freq3val").innerHTML= Math.round(keyTable[document.getElementById("key3").value]*1000)/1000
-            document.getElementById("freq4val").innerHTML= Math.round(keyTable[document.getElementById("key4").value]*1000)/1000
-            document.getElementById("freq5val").innerHTML= Math.round(keyTable[document.getElementById("key5").value]*1000)/1000
-            document.getElementById("freq6val").innerHTML= Math.round(keyTable[document.getElementById("key6").value]*1000)/1000
-            document.getElementById("freq7val").innerHTML= Math.round(keyTable[document.getElementById("key7").value]*1000)/1000
+            osc8.frequency.value = keyTable[document.getElementById("key8").value];
+            osc9.frequency.value = keyTable[document.getElementById("key9").value];
+            osc10.frequency.value = keyTable[document.getElementById("key10").value];
+            osc11.frequency.value = keyTable[document.getElementById("key11").value];
+            osc12.frequency.value = keyTable[document.getElementById("key12").value];
+            osc13.frequency.value = keyTable[document.getElementById("key13").value];
+            osc14.frequency.value = keyTable[document.getElementById("key14").value];
+            osc15.frequency.value = keyTable[document.getElementById("key15").value];
+            document.getElementById("freq0val").innerHTML= keyTable[document.getElementById("key0").value].toFixed(2)
+            document.getElementById("freq1val").innerHTML= keyTable[document.getElementById("key1").value].toFixed(2)
+            document.getElementById("freq2val").innerHTML= keyTable[document.getElementById("key2").value].toFixed(2)
+            document.getElementById("freq3val").innerHTML= keyTable[document.getElementById("key3").value].toFixed(2)
+            document.getElementById("freq4val").innerHTML= keyTable[document.getElementById("key4").value].toFixed(2)
+            document.getElementById("freq5val").innerHTML= keyTable[document.getElementById("key5").value].toFixed(2)
+            document.getElementById("freq6val").innerHTML= keyTable[document.getElementById("key6").value].toFixed(2)
+            document.getElementById("freq7val").innerHTML= keyTable[document.getElementById("key7").value].toFixed(2)
+            document.getElementById("freq8val").innerHTML= keyTable[document.getElementById("key8").value].toFixed(2)
+            document.getElementById("freq9val").innerHTML= keyTable[document.getElementById("key9").value].toFixed(2)
+            document.getElementById("freq10val").innerHTML= keyTable[document.getElementById("key10").value].toFixed(2)
+            document.getElementById("freq11val").innerHTML= keyTable[document.getElementById("key11").value].toFixed(2)
+            document.getElementById("freq12val").innerHTML= keyTable[document.getElementById("key12").value].toFixed(2)
+            document.getElementById("freq13val").innerHTML= keyTable[document.getElementById("key13").value].toFixed(2)
+            document.getElementById("freq14val").innerHTML= keyTable[document.getElementById("key14").value].toFixed(2)
+            document.getElementById("freq15val").innerHTML= keyTable[document.getElementById("key15").value].toFixed(2)
             gain0.gain.value = document.getElementById("gain0val").innerHTML= document.getElementById("gain0").value;
             gain1.gain.value = document.getElementById("gain1val").innerHTML= document.getElementById("gain1").value;
             gain2.gain.value = document.getElementById("gain2val").innerHTML= document.getElementById("gain2").value;
@@ -442,6 +660,27 @@
             gain5.gain.value = document.getElementById("gain5val").innerHTML= document.getElementById("gain5").value;
             gain6.gain.value = document.getElementById("gain6val").innerHTML= document.getElementById("gain6").value;
             gain7.gain.value = document.getElementById("gain7val").innerHTML= document.getElementById("gain7").value;
+            gain8.gain.value = document.getElementById("gain8val").innerHTML= document.getElementById("gain8").value;
+            gain9.gain.value = document.getElementById("gain9val").innerHTML= document.getElementById("gain9").value;
+            gain10.gain.value = document.getElementById("gain10val").innerHTML= document.getElementById("gain10").value;
+            gain11.gain.value = document.getElementById("gain11val").innerHTML= document.getElementById("gain11").value;
+            gain12.gain.value = document.getElementById("gain12val").innerHTML= document.getElementById("gain12").value;
+            gain13.gain.value = document.getElementById("gain13val").innerHTML= document.getElementById("gain13").value;
+            gain14.gain.value = document.getElementById("gain14val").innerHTML= document.getElementById("gain14").value;
+            gain15.gain.value = document.getElementById("gain15val").innerHTML= document.getElementById("gain15").value;
+            
+            panLfo.frequency.value = parseFloat(document.getElementById("panSpeedVal").innerHTML
+                = document.getElementById("panSpeed").value);
+            panner.positionX.value = parseFloat(document.getElementById("posxVal").innerHTML
+                = document.getElementById("posx").value);
+            panner.positionY.value = parseFloat(document.getElementById("posyVal").innerHTML
+                = document.getElementById("posy").value);
+            panner.positionZ.value = parseFloat(document.getElementById("poszVal").innerHTML
+                = document.getElementById("posz").value);
+            panGain.gain.value = document.getElementById("panGainVal").innerHTML
+                = document.getElementById("panGain").value;
+            panLfoGain.gain.value =1;
+
             const rev = document.getElementById("revlevel").value;
             revmix.gain.value = document.getElementById("revlevelval").innerHTML = rev;
             drymix.gain.value = 1 - rev;
@@ -492,6 +731,30 @@
                     break
                 case 7:
                     osc7.setPeriodicWave(waveTable);	//set to Oscillator
+                    break
+                case 8:
+                    osc8.setPeriodicWave(waveTable);	//set to Oscillator
+                    break
+                case 9:
+                    osc9.setPeriodicWave(waveTable);	//set to Oscillator
+                    break
+                case 10:
+                    osc10.setPeriodicWave(waveTable);	//set to Oscillator
+                    break
+                case 11:
+                    osc11.setPeriodicWave(waveTable);	//set to Oscillator
+                    break
+                case 12:
+                    osc12.setPeriodicWave(waveTable);	//set to Oscillator
+                    break
+                case 13:
+                    osc13.setPeriodicWave(waveTable);	//set to Oscillator
+                    break
+                case 14:
+                    osc14.setPeriodicWave(waveTable);	//set to Oscillator
+                    break
+                case 15:
+                    osc15.setPeriodicWave(waveTable);	//set to Oscillator
                     break
                 default:
                     break
