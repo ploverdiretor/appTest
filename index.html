@@ -9,7 +9,7 @@
         #midi-status { font-weight: bold; }
         #midi-log { margin-top: 10px; padding: 10px; border: 1px solid #ccc; height: 200px; overflow-y: scroll; background-color: #f9f9f9; max-width: 800px; width:95%;}
         .log-message { padding: 3px 0; border-bottom: 1px solid #eee; }
-        #field {/*display:flex;*/ justify-content: start;}
+        #field {display:flex; justify-content: start;}
         #field_right{width:50%;margin: 20px;}
         #field_left{width:50%; margin: 20px;}
     </style>
@@ -237,62 +237,16 @@
                             voice[i]='OFF'
                             const index = 'voice'+i
                             document.getElementById(index).innerHTML = voice[i]
-                            switch(i){
-                                case 0:
-                                    gain0.gain.value = document.getElementById("gain0val").innerHTML= document.getElementById("gain0").value=0;
-                                    break
-                                case 1:
-                                    gain1.gain.value = document.getElementById("gain1val").innerHTML= document.getElementById("gain1").value=0;
-                                    break
-                                case 2:
-                                    gain2.gain.value = document.getElementById("gain2val").innerHTML= document.getElementById("gain2").value=0;
-                                    break
-                                case 3:
-                                    gain3.gain.value = document.getElementById("gain3val").innerHTML= document.getElementById("gain3").value=0;
-                                    break
-                                case 4:
-                                    gain4.gain.value = document.getElementById("gain4val").innerHTML= document.getElementById("gain4").value=0;
-                                    break
-                                case 5:
-                                    gain5.gain.value = document.getElementById("gain5val").innerHTML= document.getElementById("gain5").value=0;
-                                    break
-                                case 6:
-                                    gain6.gain.value = document.getElementById("gain6val").innerHTML= document.getElementById("gain6").value=0;
-                                    break
-                                case 7:
-                                    gain7.gain.value = document.getElementById("gain7val").innerHTML= document.getElementById("gain7").value=0;
-                                    break
-                                case 8:
-                                    gain8.gain.value = document.getElementById("gain8val").innerHTML= document.getElementById("gain8").value=0;
-                                    break
-                                case 9:
-                                    gain9.gain.value = document.getElementById("gain9val").innerHTML= document.getElementById("gain9").value=0;
-                                    break
-                                case 10:
-                                    gain10.gain.value = document.getElementById("gain10val").innerHTML= document.getElementById("gain10").value=0;
-                                    break
-                                case 11:
-                                    gain11.gain.value = document.getElementById("gain11val").innerHTML= document.getElementById("gain11").value=0;
-                                    break
-                                case 12:
-                                    gain12.gain.value = document.getElementById("gain12val").innerHTML= document.getElementById("gain12").value=0;
-                                    break
-                                case 13:
-                                    gain13.gain.value = document.getElementById("gain13val").innerHTML= document.getElementById("gain13").value=0;
-                                    break
-                                case 14:
-                                    gain14.gain.value = document.getElementById("gain14val").innerHTML= document.getElementById("gain14").value=0;
-                                    break
-                                case 15:
-                                    gain15.gain.value = document.getElementById("gain15val").innerHTML= document.getElementById("gain15").value=0;
-                                    break
-                                default:
-                                    break
-                            }
+                            const t0 = audioctx.currentTime;
+                            const t1 = t0 + 0.01;
+                            const textGain = 'gain'+i
+                            const textGainVal = 'gain'+i+'val'
+                            document.getElementById(textGainVal).innerHTML= document.getElementById(textGain).value=0;
+                            gain[i].gain.cancelAndHoldAtTime(t0)
+                            gain[i].gain.linearRampToValueAtTime(0, t1)
                             break
                         }
                     }
-                    
                     break
                 case 0x09:
                     midiNoteValue = parseInt(data[1])-21
@@ -306,63 +260,13 @@
                             document.getElementById('freq'+i+'val').innerHTML= keyTable[document.getElementById('key'+i).value].toFixed(2)
                             Setup()
                             SetupWave(i);
-                            switch(i){
-                                case 0:
-                            //        gain0.gain.value = 1
-                                    const t0 = audioctx.currentTime;
-                                    const t1 = t0 + 0.0005;
-                                    gain0.gain.setValueAtTime(0, t0);
-                                    gain0.gain.linearRampToValueAtTime(1, t1);
-                                    document.getElementById("gain0val").innerHTML= document.getElementById("gain0").value=1;
-                                    break
-                                case 1:
-                                    gain1.gain.value = document.getElementById("gain1val").innerHTML= document.getElementById("gain1").value=1;
-                                    break
-                                case 2:
-                                    gain2.gain.value = document.getElementById("gain2val").innerHTML= document.getElementById("gain2").value=1;
-                                    break
-                                case 3:
-                                    gain3.gain.value = document.getElementById("gain3val").innerHTML= document.getElementById("gain3").value=1;
-                                    break
-                                case 4:
-                                    gain4.gain.value = document.getElementById("gain4val").innerHTML= document.getElementById("gain4").value=1;
-                                    break
-                                case 5:
-                                    gain5.gain.value = document.getElementById("gain5val").innerHTML= document.getElementById("gain5").value=1;
-                                    break
-                                case 6:
-                                    gain6.gain.value = document.getElementById("gain6val").innerHTML= document.getElementById("gain6").value=1;
-                                    break
-                                case 7:
-                                    gain7.gain.value = document.getElementById("gain7val").innerHTML= document.getElementById("gain7").value=1;
-                                    break
-                                case 8:
-                                    gain8.gain.value = document.getElementById("gain8val").innerHTML= document.getElementById("gain8").value=1;
-                                    break
-                                case 9:
-                                    gain9.gain.value = document.getElementById("gain9val").innerHTML= document.getElementById("gain9").value=1;
-                                    break
-                                case 10:
-                                    gain10.gain.value = document.getElementById("gain10val").innerHTML= document.getElementById("gain10").value=1;
-                                    break
-                                case 11:
-                                    gain11.gain.value = document.getElementById("gain11val").innerHTML= document.getElementById("gain11").value=1;
-                                    break
-                                case 12:
-                                    gain12.gain.value = document.getElementById("gain12val").innerHTML= document.getElementById("gain12").value=1;
-                                    break
-                                case 13:
-                                    gain13.gain.value = document.getElementById("gain13val").innerHTML= document.getElementById("gain13").value=1;
-                                    break
-                                case 14:
-                                    gain14.gain.value = document.getElementById("gain14val").innerHTML= document.getElementById("gain14").value=1;
-                                    break
-                                case 15:
-                                    gain15.gain.value = document.getElementById("gain15val").innerHTML= document.getElementById("gain15").value=1;
-                                    break
-                                default:
-                                    break
-                            }
+                            const t0 = audioctx.currentTime;
+                            const t1 = t0 + 0.0005;
+                            const textGain = 'gain'+i
+                            const textGainVal = 'gain'+i+'val'
+                            document.getElementById(textGainVal).innerHTML= document.getElementById(textGain).value=1;
+                            gain[i].gain.setValueAtTime(0, t0);
+                            gain[i].gain.linearRampToValueAtTime(1, t1);
                             break
                         }
                     }
@@ -404,46 +308,17 @@
         /*--------------------------オシレーター-------------------------*/
         
         const audioctx = new AudioContext();
-        const osc0 = new OscillatorNode(audioctx);
-        const osc1 = new OscillatorNode(audioctx);
-        const osc2 = new OscillatorNode(audioctx);
-        const osc3 = new OscillatorNode(audioctx);
-        const osc4 = new OscillatorNode(audioctx);
-        const osc5 = new OscillatorNode(audioctx);
-        const osc6 = new OscillatorNode(audioctx);
-        const osc7 = new OscillatorNode(audioctx);
-        const osc8 = new OscillatorNode(audioctx);
-        const osc9 = new OscillatorNode(audioctx);
-        const osc10 = new OscillatorNode(audioctx);
-        const osc11 = new OscillatorNode(audioctx);
-        const osc12 = new OscillatorNode(audioctx);
-        const osc13 = new OscillatorNode(audioctx);
-        const osc14 = new OscillatorNode(audioctx);
-        const osc15 = new OscillatorNode(audioctx);
-
+        var osc = []
+        var gain = []
+        for (let i=0;i<16;i++){
+            osc[i] = new OscillatorNode(audioctx);
+            gain[i] = new GainNode(audioctx);
+        }
         const tablen = 8;
         const real = new Float32Array(tablen);
         const imag = new Float32Array(tablen);
 
-        const gain0 = new GainNode(audioctx);
-        const gain1 = new GainNode(audioctx);
-        const gain2 = new GainNode(audioctx);
-        const gain3 = new GainNode(audioctx);
-        const gain4 = new GainNode(audioctx);
-        const gain5 = new GainNode(audioctx);
-        const gain6 = new GainNode(audioctx);
-        const gain7 = new GainNode(audioctx);
-        const gain8 = new GainNode(audioctx);
-        const gain9 = new GainNode(audioctx);
-        const gain10 = new GainNode(audioctx);
-        const gain11 = new GainNode(audioctx);
-        const gain12 = new GainNode(audioctx);
-        const gain13 = new GainNode(audioctx);
-        const gain14 = new GainNode(audioctx);
-        const gain15 = new GainNode(audioctx);
-
         /*---------------------------ロータリー----------------------------*/
-
 
         const panner = new PannerNode(audioctx, {panningModel:"HRTF"});
         const panGain = new GainNode(audioctx);
@@ -478,65 +353,26 @@
         const master = new GainNode(audioctx);
 
         /*-----------------------------接続------------------------------*/
-        osc0.connect(gain0).connect(panner).connect(panGain).connect(delay).connect(mix).connect(output).connect(convolver).connect(master).connect(audioctx.destination);
-        osc0.connect(gain0).connect(panner)
-        osc1.connect(gain1).connect(panner)
-        osc2.connect(gain2).connect(panner)
-        osc3.connect(gain3).connect(panner)
-        osc4.connect(gain4).connect(panner)
-        osc5.connect(gain5).connect(panner)
-        osc6.connect(gain6).connect(panner)
-        osc7.connect(gain7).connect(panner)
-        osc8.connect(gain8).connect(panner)
-        osc9.connect(gain9).connect(panner)
-        osc10.connect(gain10).connect(panner)
-        osc11.connect(gain11).connect(panner)
-        osc12.connect(gain12).connect(panner)
-        osc13.connect(gain13).connect(panner)
-        osc14.connect(gain14).connect(panner)
-        osc15.connect(gain15).connect(panner)
+        osc[0].connect(gain[0]).connect(panner).connect(panGain).connect(delay).connect(mix).connect(output).connect(convolver).connect(master).connect(audioctx.destination);
+        for (let i=1;i<16;i++){
+            osc[i].connect(gain[i]).connect(panner)
+        }
         panGain.connect(output)
         panLfo.connect(panLfoGain).connect(panner.positionX)
         output.connect(drymix).connect(master)
         lfo.connect(depth).connect(delay.delayTime);
 
         audioctx.suspend();
-        osc0.start();
-        osc1.start();
-        osc2.start();
-        osc3.start();
-        osc4.start();
-        osc5.start();
-        osc6.start();
-        osc7.start();
-        osc8.start();
-        osc9.start();
-        osc10.start();
-        osc11.start();
-        osc12.start();
-        osc13.start();
-        osc14.start();
-        osc15.start();
+        for (let i=0;i<16;i++){
+            osc[i].start();  
+        }
         document.getElementById("stop").addEventListener("click", ()=>{
             audioctx.suspend();
         });
         document.getElementById("play").addEventListener("click", ()=>{
-            SetupWave(0);
-            SetupWave(1);
-            SetupWave(2);
-            SetupWave(3);
-            SetupWave(4);
-            SetupWave(5);
-            SetupWave(6);
-            SetupWave(7);
-            SetupWave(8);
-            SetupWave(9);
-            SetupWave(10);
-            SetupWave(11);
-            SetupWave(12);
-            SetupWave(13);
-            SetupWave(14);
-            SetupWave(15);
+            for (let i=0;i<16;i++){
+                SetupWave(i);
+            }
             audioctx.resume();
         });
         document.getElementById("key0").addEventListener("input", Setup);
@@ -574,22 +410,9 @@
         for(let i=1;i<8;++i){
             document.getElementById("imag"+i).addEventListener("input", ()=>{
                 Setup()
-                SetupWave(0);
-                SetupWave(1);
-                SetupWave(2);
-                SetupWave(3);
-                SetupWave(4);
-                SetupWave(5);
-                SetupWave(6);
-                SetupWave(7);
-                SetupWave(8);
-                SetupWave(9);
-                SetupWave(10);
-                SetupWave(11);
-                SetupWave(12);
-                SetupWave(13);
-                SetupWave(14);
-                SetupWave(15);
+                for (let j=0;j<16;j++){
+                    SetupWave(j);
+                }
             });
         }
         document.getElementById("panSpeed").addEventListener("input", Setup);
@@ -605,74 +428,22 @@
         document.getElementById("revlevel").addEventListener("input", Setup);
         document.getElementById("master").addEventListener("input", Setup);
         Setup();
-        SetupWave(0);
-        SetupWave(1);
-        SetupWave(2);
-        SetupWave(3);
-        SetupWave(4);
-        SetupWave(5);
-        SetupWave(6);
-        SetupWave(7);
-        SetupWave(8);
-        SetupWave(9);
-        SetupWave(10);
-        SetupWave(11);
-        SetupWave(12);
-        SetupWave(13);
-        SetupWave(14);
-        SetupWave(15);
+        for (let j=0;j<16;j++){
+            SetupWave(j);
+        }
         audioctx.resume();
 
         function Setup(){
-            osc0.frequency.value = keyTable[document.getElementById("key0").value];
-            osc1.frequency.value = keyTable[document.getElementById("key1").value];
-            osc2.frequency.value = keyTable[document.getElementById("key2").value];
-            osc3.frequency.value = keyTable[document.getElementById("key3").value];
-            osc4.frequency.value = keyTable[document.getElementById("key4").value];
-            osc5.frequency.value = keyTable[document.getElementById("key5").value];
-            osc6.frequency.value = keyTable[document.getElementById("key6").value];
-            osc7.frequency.value = keyTable[document.getElementById("key7").value];
-            osc8.frequency.value = keyTable[document.getElementById("key8").value];
-            osc9.frequency.value = keyTable[document.getElementById("key9").value];
-            osc10.frequency.value = keyTable[document.getElementById("key10").value];
-            osc11.frequency.value = keyTable[document.getElementById("key11").value];
-            osc12.frequency.value = keyTable[document.getElementById("key12").value];
-            osc13.frequency.value = keyTable[document.getElementById("key13").value];
-            osc14.frequency.value = keyTable[document.getElementById("key14").value];
-            osc15.frequency.value = keyTable[document.getElementById("key15").value];
-            document.getElementById("freq0val").innerHTML= keyTable[document.getElementById("key0").value].toFixed(2)
-            document.getElementById("freq1val").innerHTML= keyTable[document.getElementById("key1").value].toFixed(2)
-            document.getElementById("freq2val").innerHTML= keyTable[document.getElementById("key2").value].toFixed(2)
-            document.getElementById("freq3val").innerHTML= keyTable[document.getElementById("key3").value].toFixed(2)
-            document.getElementById("freq4val").innerHTML= keyTable[document.getElementById("key4").value].toFixed(2)
-            document.getElementById("freq5val").innerHTML= keyTable[document.getElementById("key5").value].toFixed(2)
-            document.getElementById("freq6val").innerHTML= keyTable[document.getElementById("key6").value].toFixed(2)
-            document.getElementById("freq7val").innerHTML= keyTable[document.getElementById("key7").value].toFixed(2)
-            document.getElementById("freq8val").innerHTML= keyTable[document.getElementById("key8").value].toFixed(2)
-            document.getElementById("freq9val").innerHTML= keyTable[document.getElementById("key9").value].toFixed(2)
-            document.getElementById("freq10val").innerHTML= keyTable[document.getElementById("key10").value].toFixed(2)
-            document.getElementById("freq11val").innerHTML= keyTable[document.getElementById("key11").value].toFixed(2)
-            document.getElementById("freq12val").innerHTML= keyTable[document.getElementById("key12").value].toFixed(2)
-            document.getElementById("freq13val").innerHTML= keyTable[document.getElementById("key13").value].toFixed(2)
-            document.getElementById("freq14val").innerHTML= keyTable[document.getElementById("key14").value].toFixed(2)
-            document.getElementById("freq15val").innerHTML= keyTable[document.getElementById("key15").value].toFixed(2)
-            gain0.gain.value = document.getElementById("gain0val").innerHTML= document.getElementById("gain0").value;
-            gain1.gain.value = document.getElementById("gain1val").innerHTML= document.getElementById("gain1").value;
-            gain2.gain.value = document.getElementById("gain2val").innerHTML= document.getElementById("gain2").value;
-            gain3.gain.value = document.getElementById("gain3val").innerHTML= document.getElementById("gain3").value;
-            gain4.gain.value = document.getElementById("gain4val").innerHTML= document.getElementById("gain4").value;
-            gain5.gain.value = document.getElementById("gain5val").innerHTML= document.getElementById("gain5").value;
-            gain6.gain.value = document.getElementById("gain6val").innerHTML= document.getElementById("gain6").value;
-            gain7.gain.value = document.getElementById("gain7val").innerHTML= document.getElementById("gain7").value;
-            gain8.gain.value = document.getElementById("gain8val").innerHTML= document.getElementById("gain8").value;
-            gain9.gain.value = document.getElementById("gain9val").innerHTML= document.getElementById("gain9").value;
-            gain10.gain.value = document.getElementById("gain10val").innerHTML= document.getElementById("gain10").value;
-            gain11.gain.value = document.getElementById("gain11val").innerHTML= document.getElementById("gain11").value;
-            gain12.gain.value = document.getElementById("gain12val").innerHTML= document.getElementById("gain12").value;
-            gain13.gain.value = document.getElementById("gain13val").innerHTML= document.getElementById("gain13").value;
-            gain14.gain.value = document.getElementById("gain14val").innerHTML= document.getElementById("gain14").value;
-            gain15.gain.value = document.getElementById("gain15val").innerHTML= document.getElementById("gain15").value;
-            
+            for (let i=0;i<16;i++){
+                const textKey = 'key'+i;
+                const textFreqVal='freq'+i+'val';
+                const textGain = 'gain'+i
+                const textGainVal = 'gain'+i+'val'
+                osc[i].frequency.value = keyTable[document.getElementById(textKey).value];
+                document.getElementById(textFreqVal).innerHTML= keyTable[document.getElementById(textKey).value].toFixed(2)
+                gain[i].gain.value = document.getElementById(textGainVal ).innerHTML= document.getElementById(textGain).value;
+            }
+
             panLfo.frequency.value = parseFloat(document.getElementById("panSpeedVal").innerHTML
                 = document.getElementById("panSpeed").value);
             panner.positionX.value = parseFloat(document.getElementById("posxVal").innerHTML
@@ -711,59 +482,7 @@
                 }
             }
             const waveTable = audioctx.createPeriodicWave(real, imag);	//create periodicWave
-            switch(num){
-                case 0:
-                    osc0.setPeriodicWave(waveTable);	//set to Oscillator
-                    break
-                case 1:
-                    osc1.setPeriodicWave(waveTable);	//set to Oscillator
-                    break
-                case 2:
-                    osc2.setPeriodicWave(waveTable);	//set to Oscillator
-                    break
-                case 3:
-                    osc3.setPeriodicWave(waveTable);	//set to Oscillator
-                    break
-                case 4:
-                    osc4.setPeriodicWave(waveTable);	//set to Oscillator
-                    break
-                case 5:
-                    osc5.setPeriodicWave(waveTable);	//set to Oscillator
-                    break
-                case 6:
-                    osc6.setPeriodicWave(waveTable);	//set to Oscillator
-                    break
-                case 7:
-                    osc7.setPeriodicWave(waveTable);	//set to Oscillator
-                    break
-                case 8:
-                    osc8.setPeriodicWave(waveTable);	//set to Oscillator
-                    break
-                case 9:
-                    osc9.setPeriodicWave(waveTable);	//set to Oscillator
-                    break
-                case 10:
-                    osc10.setPeriodicWave(waveTable);	//set to Oscillator
-                    break
-                case 11:
-                    osc11.setPeriodicWave(waveTable);	//set to Oscillator
-                    break
-                case 12:
-                    osc12.setPeriodicWave(waveTable);	//set to Oscillator
-                    break
-                case 13:
-                    osc13.setPeriodicWave(waveTable);	//set to Oscillator
-                    break
-                case 14:
-                    osc14.setPeriodicWave(waveTable);	//set to Oscillator
-                    break
-                case 15:
-                    osc15.setPeriodicWave(waveTable);	//set to Oscillator
-                    break
-                default:
-                    break
-            }
-            
+            osc[num].setPeriodicWave(waveTable);
         }
         function LoadSample(actx, url) {
             return new Promise((resolv)=>{
