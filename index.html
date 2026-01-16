@@ -361,7 +361,8 @@
         panLfo.connect(panLfoGain).connect(panner.positionX)
         output.connect(drymix).connect(master)
         lfo.connect(depth).connect(delay.delayTime);
-
+        
+        /*-----------------------------初期化------------------------------*/
         audioctx.suspend();
         for (let i=0;i<16;i++){
             osc[i].start();  
@@ -433,6 +434,7 @@
         }
         audioctx.resume();
 
+        /*-----------------------------セットアップ------------------------------*/
         function Setup(){
             for (let i=0;i<16;i++){
                 const textKey = 'key'+i;
@@ -471,6 +473,7 @@
             master.gain.value = document.getElementById("masterval").innerHTML
                 = document.getElementById("master").value;
         }
+        /*-----------------------------ドローバー設定------------------------------*/
         function SetupWave(num){
             for(i = 0; i < tablen; i++) { // make Harmonics
                 real[i] = 0;
@@ -484,6 +487,7 @@
             const waveTable = audioctx.createPeriodicWave(real, imag);	//create periodicWave
             osc[num].setPeriodicWave(waveTable);
         }
+        /*-----------------------------リバーブ設定------------------------------*/
         function LoadSample(actx, url) {
             return new Promise((resolv)=>{
                 fetch(url).then((response)=>{
