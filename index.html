@@ -9,9 +9,10 @@
         #midi-status { font-weight: bold; }
         #midi-log { margin-top: 10px; padding: 10px; border: 1px solid #ccc; height: 100px; overflow-y: scroll; background-color: #f9f9f9; max-width: 800px; width:95%;}
         .log-message { padding: 3px 0; border-bottom: 1px solid #eee; }
-        #field {display:flex; justify-content: start;}
+        #field {/*display:flex;*/ justify-content: start;}
         #field_right{width:50%;margin: 20px;}
         #field_left{width:50%; margin: 20px;}
+        #effectTable td{vertical-align:top; width:33%;}
     </style>
 </head>
 <body>
@@ -49,17 +50,41 @@
                     <td id="gain8val" align="center"></td><td id="gain9val" align="center"></td><td id="gain10val" align="center"></td><td id="gain11val" align="center"></td>
                     <td id="gain12val" align="center"></td><td id="gain13val" align="center"></td><td id="gain14val" align="center"></td><td id="gain15val" align="center"></td>
                 </tr>
+    <            <tr>
+                    <td id="env0val" align="center"></td><td id="env1val" align="center"></td><td id="env2val" align="center"></td><td id="env3val" align="center"></td>
+                    <td id="env4val" align="center"></td><td id="env5val" align="center"></td><td id="env6val" align="center"></td><td id="env7val" align="center"></td>
+                    <td id="env8val" align="center"></td><td id="env9val" align="center"></td><td id="env10val" align="center"></td><td id="env11val" align="center"></td>
+                    <td id="env12val" align="center"></td><td id="env13val" align="center"></td><td id="env14val" align="center"></td><td id="env15val" align="center"></td>
+                </tr>
+                
             </table><br>
-            <hr width="95%" align="left">
+            
         
-            <table border="0">
+    <!--        <table border="0">
                 <tr><td><h3>Oscillator:</h3></td><td><button id="play">Play</button> <button id="stop">Stop</button></td></tr>
             </table>
-            <hr width="95%" align="left">
+            <hr width="95%" align="left">-->
         </div>
-        <hr>
+    <!--    <hr>-->
         <div id="field_right">
-            <h3>Custom waveform:</h3>
+    <!--        <h3>Custom waveform:</h3>-->
+            <hr width="95%" align="left">
+            <table width="95%">
+            <tr>
+            <td width="50%">
+                <table border="0">
+                    <tr>
+                        <td><h3>Oscillator & Custom waveform:</h3></td><td><button id="play">Play</button> <button id="stop">Stop</button></td>
+                    </tr>
+                </table>
+            </td>
+            <td>
+                <table>
+                <tr><th>Master</th><td><input type="range" id="master" min="0" max="1" step="0.01" value="0.2"/></td><td id="masterval"></td></tr>
+                </table>
+            </td>
+            </tr>
+            </table>
             <table border="0">
             <tr><th>Harmonics</th><th>imag</th></tr>
             <tr><th>1</th><td><input type="range" min="0" max="1" step="0.01" id="imag1" value="1"/></td><td id="imag1val"></td></tr>
@@ -73,23 +98,32 @@
             <br>
             <hr width="95%" align="left">
             <h3>Effect:</h3>
-            <table>
-            <tr><th>Panner</th></tr>
-            <tr><th>PanSpeed</th><td><input type="range" id="panSpeed" min="3.5" max="7" step="0.01" value="3.5"/></td><td id="panSpeedVal"></td></tr>
-            <tr><th>PanGain</th><td><input type="range" id="panGain" min="0" max="1" step="0.01" value="0.8"/></td><td id="panGainVal"></td></tr>
-            <tr><td><br/></td></tr>
-            <tr><th>Chorus</th><th></th></tr>
-            <tr><th>Speed</th><td><input type="range" id="speed" min="0.1" max="10" step="0.1" value="7"/></td><td id="speedval"></td></tr>
-            <tr><th>Depth</th><td><input type="range" id="depth" min="0.000" max="0.005" step="0.0001" value="0.0003"/></td><td id="depthval"></td></tr>
-            <tr><th>Mix</th><td><input type="range" id="mix" min="0" max="1" step="0.01" value="0.4"/></td><td id="mixval"></td></tr>
-            <tr><th>Output</th><td><input type="range" id="output" min="0" max="1" step="0.01" value="0.8"/></td><td id="outputval"></td></tr>
-
-            <tr><td><br/></td></tr>
-            <tr><th>Reverb</th><th></th></tr>
-            <tr><th>Mix</th><td><input type="range" id="revlevel" min="0" max="1" step="0.01" value="0.5"/></td><td id="revlevelval"></td></tr>
-            
-            <tr><td><br/></td></tr>
-            <tr><th>Master</th><td><input type="range" id="master" min="0" max="1" step="0.01" value="0.2"/></td><td id="masterval"></td></tr>
+            <table id="effectTable" border="0" width="95%">
+            <tr>
+            <td>
+                <table>
+                <tr><th>Panner</th></tr>
+                <tr><th>PanSpeed</th><td><input type="range" id="panSpeed" min="3.5" max="6" step="0.01" value="3.5"/></td><td id="panSpeedVal"></td></tr>
+                <tr><th>PanLFOGain</th><td><input type="range" id="panLfoGain" min="0" max="1" step="0.01" value="0.8"/></td><td id="panLfoGainVal"></td></tr>
+                <tr><th>PanGain</th><td><input type="range" id="panGain" min="0" max="1" step="0.01" value="0.8"/></td><td id="panGainVal"></td></tr>
+                </table>
+            </td>
+            <td>
+                <table>
+                <tr><th>Chorus</th><th></th></tr>
+                <tr><th>Speed</th><td><input type="range" id="speed" min="0.1" max="10" step="0.1" value="7"/></td><td id="speedval"></td></tr>
+                <tr><th>Depth</th><td><input type="range" id="depth" min="0.000" max="0.005" step="0.0001" value="0.0003"/></td><td id="depthval"></td></tr>
+                <tr><th>Mix</th><td><input type="range" id="mix" min="0" max="1" step="0.01" value="0.4"/></td><td id="mixval"></td></tr>
+                <tr><th>Output</th><td><input type="range" id="output" min="0" max="1" step="0.01" value="0.8"/></td><td id="outputval"></td></tr>
+                </table>
+            </td>
+            <td>
+                <table>
+                <tr><th>Reverb</th><th></th></tr>
+                <tr><th>Mix</th><td><input type="range" id="revlevel" min="0" max="1" step="0.01" value="0.5"/></td><td id="revlevelval"></td></tr>
+                </table>
+            </td>
+            </tr>
             </table>
         </div>
     </div>
@@ -134,12 +168,14 @@
                             '','','','','ポルタメントコントロール'];
         let midiNoteValue = 0
         let voice = ['OFF','OFF','OFF','OFF','OFF','OFF','OFF','OFF','OFF','OFF','OFF','OFF','OFF','OFF','OFF','OFF']
+        let voiceEnv = ['OFF','OFF','OFF','OFF','OFF','OFF','OFF','OFF','OFF','OFF','OFF','OFF','OFF','OFF','OFF','OFF']
         let voiceFreq = [440,440,440,440,440,440,440,440,440,440,440,440,440,440,440,440]
         let voiceGain = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
         let voiceIndex = 0
         for(let i=0;i<16;i++){
             const index = 'voice'+i
             document.getElementById(index).innerHTML = voice[i]
+            document.getElementById('env'+i+'val').innerHTML = 'OFF'
         }
         
         if (navigator.requestMIDIAccess) {
@@ -169,6 +205,11 @@
             document.getElementById('midi-status').style.color = 'red';
         }
 
+        function funcVoiceEnv(num){
+            voiceEnv[num]='OFF'
+            document.getElementById('env'+num+'val').innerHTML = 'OFF'
+        }
+
         function handleMIDIMessage(event) {
             // event.data is a Uint8Array [status byte, data1, data2]
             
@@ -190,8 +231,10 @@
                             voice[i]='OFF'
                             const index = 'voice'+i
                             document.getElementById(index).innerHTML = voice[i]
+                            const releaseTime = 0.1;
                             const t0 = audioctx.currentTime;
-                            const t1 = t0 + 0.01;
+                            const t1 = t0 + releaseTime;
+                            setTimeout(funcVoiceEnv, releaseTime*1000,i);
                             const textGain = 'gain'+i
                             const textGainVal = 'gain'+i+'val'
                             document.getElementById(textGainVal).innerHTML=0;
@@ -206,19 +249,28 @@
                     midiNoteValue = parseInt(data[1])-21
                     midiText = 'Ch('+midiCh+')　Note On('+noteNum[data[1]]+') velo:'+data[2].toString(10).padStart(3,'0')+'　freq:'+keyTable[midiNoteValue].toFixed(2)
                     for(let i=0;i<16;i++){
-                        if(voice[i]==='OFF'){
+                        if(voiceEnv[i]==='OFF'){
                             voice[i]=data[1]
+                            voiceEnv[i]='ON'
+                            document.getElementById('env'+i+'val').innerHTML = 'ON'
                             const index = 'voice'+i
                             document.getElementById(index).innerHTML = voice[i]
                             document.getElementById('freq'+i+'val').innerHTML= keyTable[midiNoteValue].toFixed(2)
                             voiceFreq[i] = keyTable[midiNoteValue].toFixed(2);
                             const textGainVal = 'gain'+i+'val'
                             document.getElementById(textGainVal).innerHTML=1;
+                            
+                            const attackTime = 0.01;
                             const t0 = audioctx.currentTime;
-                            const t1 = t0 + 0.0005;
-                            voiceGain[i]=1;
+                            const t1 = t0 + attackTime;
+                            
+                            
+                        //    gain[i].gain.cancelScheduledValues(t0)
                             gain[i].gain.setValueAtTime(0, t0);
                             gain[i].gain.linearRampToValueAtTime(1, t1);
+                            voiceGain[i]=1;
+                            osc[i].frequency.value = voiceFreq[i];
+                            document.getElementById(textFreqVal).innerHTML= voiceFreq[i];
                             Setup()
                             SetupWave(i);
                             break
@@ -275,11 +327,13 @@
         /*---------------------------ロータリー----------------------------*/
 
         const panner = new PannerNode(audioctx, {panningModel:"HRTF"});
+        const panLfo = new OscillatorNode(audioctx);
         const panGain = new GainNode(audioctx);
         const panLfoGain = new GainNode(audioctx);
-        panLfoGain.gain.value = 0.1
+        
         panGain.gain.value = document.getElementById("panGain").value;
-        const panLfo = new OscillatorNode(audioctx);
+        
+        panLfoGain.gain.value = document.getElementById("panLfoGain").value;
         panLfo.frequency.value = document.getElementById("panSpeed").value;
         panLfo.start()
         /*---------------------------コーラス----------------------------*/
@@ -309,6 +363,7 @@
         }
         panGain.connect(output)
         panLfo.connect(panLfoGain).connect(panner.positionX)
+    //    panLfo.connect(panner.positionX)
         output.connect(drymix).connect(master)
         lfo.connect(depth).connect(delay.delayTime);
         
@@ -335,6 +390,7 @@
             });
         }
         document.getElementById("panSpeed").addEventListener("input", Setup);
+        document.getElementById("panLfoGain").addEventListener("input", Setup);
         document.getElementById("panGain").addEventListener("input", Setup);
         document.getElementById("speed").addEventListener("input", Setup);
         document.getElementById("depth").addEventListener("input", Setup);
@@ -342,22 +398,26 @@
         document.getElementById("output").addEventListener("input", Setup);
         document.getElementById("revlevel").addEventListener("input", Setup);
         document.getElementById("master").addEventListener("input", Setup);
+        for (let i=0;i<16;i++){
+            const textKey = 'key'+i;
+            const textFreqVal='freq'+i+'val';
+            osc[i].frequency.value = voiceFreq[i];
+            document.getElementById(textFreqVal).innerHTML= voiceFreq[i];
+        }
         Setup();
         for (let j=0;j<16;j++){
             SetupWave(j);
         }
         audioctx.resume();
-
         /*-----------------------------セットアップ------------------------------*/
         function Setup(){
             for (let i=0;i<16;i++){
-                const textKey = 'key'+i;
+            /*    const textKey = 'key'+i;
                 const textFreqVal='freq'+i+'val';
+                osc[i].frequency.value = voiceFreq[i];
+                document.getElementById(textFreqVal).innerHTML= voiceFreq[i];*/
                 const textGain = 'gain'+i
                 const textGainVal = 'gain'+i+'val'
-            //    osc[i].frequency.value = keyTable[document.getElementById(textKey).value];
-                osc[i].frequency.value = voiceFreq[i];
-                document.getElementById(textFreqVal).innerHTML= voiceFreq[i];
                 gain[i].gain.value = voiceGain[i];
                 document.getElementById(textGainVal ).innerHTML= voiceGain[i];
             }
@@ -366,7 +426,8 @@
                 = document.getElementById("panSpeed").value);
             panGain.gain.value = document.getElementById("panGainVal").innerHTML
                 = document.getElementById("panGain").value;
-            panLfoGain.gain.value =1;
+            panLfoGain.gain.value =(document.getElementById("panLfoGain").value/1100000) + 0.0000008 ;
+            document.getElementById("panLfoGainVal").innerHTML= document.getElementById("panLfoGain").value ;
 
             const rev = document.getElementById("revlevel").value;
             revmix.gain.value = document.getElementById("revlevelval").innerHTML = rev;
