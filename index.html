@@ -13,6 +13,8 @@
         #field_right{width:50%;margin: 20px;}
         #field_left{width:50%; margin: 20px;}
         #effectTable td{vertical-align:top; width:33%;}
+        #toneTable td{vertical-align:top; width:50%; }
+        
     </style>
 </head>
 <body>
@@ -85,20 +87,35 @@
             </td>
             </tr>
             </table>
-            <table border="0">
-            <tr><th>Harmonics</th><th>imag</th></tr>
-            <tr><th>1</th><td><input type="range" min="0" max="1" step="0.01" id="imag1" value="1"/></td><td id="imag1val"></td></tr>
-            <tr><th>2</th><td><input type="range" min="0" max="1" step="0.01" id="imag2" value="0.5"/></td><td id="imag2val"></td></tr>
-            <tr><th>3</th><td><input type="range" min="0" max="1" step="0.01" id="imag3" value="0"/></td><td id="imag3val"></td></tr>
-            <tr><th>4</th><td><input type="range" min="0" max="1" step="0.01" id="imag4" value="0"/></td><td id="imag4val"></td></tr>
-            <tr><th>5</th><td><input type="range" min="0" max="1" step="0.01" id="imag5" value="0"/></td><td id="imag5val"></td></tr>
-            <tr><th>6</th><th><input type="range" min="0" max="1" step="0.01" id="imag6" value="0"/></td><td id="imag6val"></td></tr>
-            <tr><th>7</th><td><input type="range" min="0" max="1" step="0.01" id="imag7" value="0"/></td><td id="imag7val"></td></tr>
+            <table id="toneTable" width="95%" border="0">
+            <tr>
+            <td>
+                <table border="0"  width="10%">
+                <tr><th>Harmonics</th><th>imag</th></tr>
+                <tr><th>1</th><td><input type="range" min="0" max="1" step="0.01" id="imag1" value="1"/></td><td id="imag1val"></td></tr>
+                <tr><th>2</th><td><input type="range" min="0" max="1" step="0.01" id="imag2" value="0.5"/></td><td id="imag2val"></td></tr>
+                <tr><th>3</th><td><input type="range" min="0" max="1" step="0.01" id="imag3" value="0"/></td><td id="imag3val"></td></tr>
+                <tr><th>4</th><td><input type="range" min="0" max="1" step="0.01" id="imag4" value="0"/></td><td id="imag4val"></td></tr>
+                <tr><th>5</th><td><input type="range" min="0" max="1" step="0.01" id="imag5" value="0"/></td><td id="imag5val"></td></tr>
+                <tr><th>6</th><td><input type="range" min="0" max="1" step="0.01" id="imag6" value="0"/></td><td id="imag6val"></td></tr>
+                <tr><th>7</th><td><input type="range" min="0" max="1" step="0.01" id="imag7" value="0"/></td><td id="imag7val"></td></tr>
+                </table>
+            </td>
+            <td>
+                <table border="0" width="10%">
+                <tr><th>Envelope</th><th></th></tr>
+                <tr><th>Attack_Time</th><td><input type="range" min="0" max="1" step="0.01" id="attack" value="0"/></td><td id="attackTime"></td></tr>
+                <tr><th>Decay_Time</th><td><input type="range" min="0" max="1" step="0.01" id="decay" value="0"/></td><td id="decayTime"></td></tr>
+                <tr><th>Sustain_Level</th><td><input type="range" min="0" max="1" step="0.01" id="sustain" value="1"/></td><td id="sustainLevel"></td></tr>
+                <tr><th>Release_Time</th><td><input type="range" min="0" max="1" step="0.01" id="release" value="0"/></td><td id="releaseTime"></td></tr>
+                </table>
+            </td>
+            </tr>
             </table>
             <br>
             <hr width="95%" align="left">
             <h3>Effect:</h3>
-            <table id="effectTable" border="0" width="95%">
+            <table id="effectTable" border="1" width="95%">
             <tr>
             <td>
                 <table>
@@ -112,7 +129,7 @@
                 <table>
                 <tr><th>Chorus</th><th></th></tr>
                 <tr><th>Speed</th><td><input type="range" id="speed" min="0.1" max="10" step="0.1" value="7"/></td><td id="speedval"></td></tr>
-                <tr><th>Depth</th><td><input type="range" id="depth" min="0.000" max="0.005" step="0.0001" value="0.0003"/></td><td id="depthval"></td></tr>
+                <tr><th>Depth</th><td><input type="range" id="depth" min="0.000" max="0.005" step="0.0001" value="0.0001"/></td><td id="depthval"></td></tr>
                 <tr><th>Mix</th><td><input type="range" id="mix" min="0" max="1" step="0.01" value="0.4"/></td><td id="mixval"></td></tr>
                 <tr><th>Output</th><td><input type="range" id="output" min="0" max="1" step="0.01" value="0.8"/></td><td id="outputval"></td></tr>
                 </table>
@@ -231,7 +248,7 @@
                             voice[i]='OFF'
                             const index = 'voice'+i
                             document.getElementById(index).innerHTML = voice[i]
-                            const releaseTime = 0.1;
+                            const releaseTime = 0.5;
                             const t0 = audioctx.currentTime;
                             const t1 = t0 + releaseTime;
                             setTimeout(funcVoiceEnv, releaseTime*1000,i);
@@ -389,6 +406,10 @@
                 }
             });
         }
+        document.getElementById("attack").addEventListener("input", Setup);
+        document.getElementById("decay").addEventListener("input", Setup);
+        document.getElementById("sustain").addEventListener("input", Setup);
+        document.getElementById("release").addEventListener("input", Setup);
         document.getElementById("panSpeed").addEventListener("input", Setup);
         document.getElementById("panLfoGain").addEventListener("input", Setup);
         document.getElementById("panGain").addEventListener("input", Setup);
@@ -421,6 +442,11 @@
                 gain[i].gain.value = voiceGain[i];
                 document.getElementById(textGainVal ).innerHTML= voiceGain[i];
             }
+
+            document.getElementById("attackTime").innerHTML= document.getElementById("attack").value;
+            document.getElementById("decayTime").innerHTML= document.getElementById("decay").value;
+            document.getElementById("sustainLevel").innerHTML= document.getElementById("sustain").value;
+            document.getElementById("releaseTime").innerHTML= document.getElementById("release").value;
 
             panLfo.frequency.value = parseFloat(document.getElementById("panSpeedVal").innerHTML
                 = document.getElementById("panSpeed").value);
