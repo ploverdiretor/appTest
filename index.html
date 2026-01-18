@@ -5,15 +5,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Web MIDI Synthesizer</title>
     <style>
-        body { font-family: monospace; margin: 20px;  width:95%;}
+        body { font-family: monospace; margin: 20px;  width:95%; font-size: 12px;max-width: 700px;}
         #midi-status { font-weight: bold; }
-        #midi-log { margin-top: 10px; padding: 10px; border: 1px solid #ccc; height: 100px; overflow-y: scroll; background-color: #f9f9f9; max-width: 800px; width:95%;}
-        .log-message { padding: 3px 0; border-bottom: 1px solid #eee; }
+        #midi-log { margin-top: 10px; padding: 10px; border: 1px solid #ccc; height: 100px; overflow-y: scroll; background-color: #f9f9f9; max-width: 600px; width:95%;}
+        .log-message { padding: 3px 0; border-bottom: 1px solid #eee; font-size: 12px;}
         #field {/*display:flex;*/ justify-content: start;}
-        #field_right{width:50%;margin: 20px;}
-        #field_left{width:50%; margin: 20px;}
+        #field_right{width:100%;margin: 20px;}
+        #field_left{width:100%; margin: 20px;}
         #effectTable td{vertical-align:top; width:33%;}
         #toneTable td{vertical-align:top; width:50%; }
+        #assigner {width:600px;  border-collapse: collapse; font-size: 11px;}
         
     </style>
 </head>
@@ -27,7 +28,7 @@
             <div id="midi-log"></div>
             <hr width="95%" align="left">
             <h3>Voice Assigner:</h3>
-            <table border="1" width="800px"  style="border-collapse: collapse">
+            <table border="1"  id="assigner">
                 <tr>
                     <td align="center" width="6.25%">0</td><td align="center" width="6.25%">1</td><td align="center" width="6.25%">2</td><td align="center" width="6.25%">3</td>
                     <td align="center" width="6.25%">4</td><td align="center" width="6.25%">5</td><td align="center" width="6.25%">6</td><td align="center" width="6.25%">7</td>
@@ -51,19 +52,10 @@
                     <td id="env4val" align="center"></td><td id="env5val" align="center"></td><td id="env6val" align="center"></td><td id="env7val" align="center"></td>
                     <td id="env8val" align="center"></td><td id="env9val" align="center"></td><td id="env10val" align="center"></td><td id="env11val" align="center"></td>
                     <td id="env12val" align="center"></td><td id="env13val" align="center"></td><td id="env14val" align="center"></td><td id="env15val" align="center"></td>
-                </tr>
-                
-            </table><br>
-            
-        
-    <!--        <table border="0">
-                <tr><td><h3>Oscillator:</h3></td><td><button id="play">Play</button> <button id="stop">Stop</button></td></tr>
+                </tr> 
             </table>
-            <hr width="95%" align="left">-->
         </div>
-    <!--    <hr>-->
         <div id="field_right">
-    <!--        <h3>Custom waveform:</h3>-->
             <hr width="95%" align="left">
             <table width="95%">
             <tr>
@@ -168,7 +160,7 @@
                             'C7','C#7','D7','D#7','E7','F7','F#7','G7','G#7','A7','A#7','B7',
                             'C8','C#8','D8','D#8','E8','F8','F#8','G8','G#8','A8','A#8','B8',
                             'C9','C#9','D9','D#9','E9','F9','F#9','G9'];
-        const ccType = [    '','モジュレーション','ブレスコントローラー','','フットコントローラー','ポルタメントタイム','データ入力 MSB','','バランスコントローラー','',
+        const ccType = [    '','modulation','ブレスコントローラー','','フットコントローラー','ポルタメントタイム','データ入力 MSB','','バランスコントローラー','',
                             '','エクスプレッション','エフェクトコントローラー1','エフェクトコントローラー2','','','','','','',
                             '','','','','','','','','','',
                             '','','','モジュレーションホイール LSB','ブレスコントローラー LSB','','フットコントローラー LSB','ポルタメントタイム LSB','データ入力 MSB LSB','メインボリューム LSB',
